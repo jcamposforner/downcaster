@@ -64,6 +64,27 @@ pub trait Downcast: AsAny {
 
 impl<T: ?Sized + AsAny> Downcast for T {}
 
+macro_rules! downcast {
+    ($value:expr, $type:ty) => {
+        $value.downcast::<$type>()
+    };
+    () => {};
+}
+
+macro_rules! downcast_ref {
+    ($value:expr, $type:ty) => {
+        $value.downcast_ref::<$type>()
+    };
+    () => {};
+}
+
+macro_rules! downcast_mut {
+    ($value:expr, $type:ty) => {
+        $value.downcast_mut::<$type>()
+    };
+    () => {};
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -75,12 +96,37 @@ mod tests {
         assert_eq!(value.downcast_ref::<i32>(), Some(&42));
     }
 
+
+    #[test]
+    fn test_as_any_macro() {
+        let value = 42;
+
+        assert_eq!(downcast_ref!(value, i32), Some(&42));
+    }
+
+    #[test]
+    fn as_any_mut_macro() {
+        let mut value = 42;
+
+        assert_eq!(downcast_mut!(value, i32), Some(&mut 42));
+    }
+
     #[test]
     fn as_any_mut() {
         let mut value = 42;
 
         assert_eq!(value.downcast_mut::<i32>(), Some(&mut 42));
     }
+
+    #[test]
+    fn into_any_macro() {
+        let value= Box::new(42);
+        let any = value.as_any_box();
+        let option = downcast!(any, i32);
+
+        assert!(option.is_ok());
+    }
+
 
     #[test]
     fn into_any() {
