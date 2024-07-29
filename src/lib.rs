@@ -64,6 +64,7 @@ pub trait Downcast: AsAny {
 
 impl<T: ?Sized + AsAny> Downcast for T {}
 
+#[macro_export]
 macro_rules! downcast {
     ($value:expr, $type:ty) => {
         $value.downcast::<$type>()
@@ -71,6 +72,7 @@ macro_rules! downcast {
     () => {};
 }
 
+#[macro_export]
 macro_rules! downcast_ref {
     ($value:expr, $type:ty) => {
         $value.downcast_ref::<$type>()
@@ -78,6 +80,7 @@ macro_rules! downcast_ref {
     () => {};
 }
 
+#[macro_export]
 macro_rules! downcast_mut {
     ($value:expr, $type:ty) => {
         $value.downcast_mut::<$type>()
